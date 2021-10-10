@@ -3,10 +3,10 @@
 import sys, getopt
 
 def lineCheck(FileToCheck, count = 70):
+    out = "linenumber Charactercount line"
     if type(FileToCheck) == list:
-        out = ""
         for file in FileToCheck:
-            out = "{Out}\n{File}:\n{content}".format(Out = out, File = file, content = lineCheck(file, count))
+            out += f"\n{file}:\n{lineCheck(file, count)}"
         return out
     try:
         FileToCheck = str(FileToCheck.strip("'"))
@@ -18,16 +18,15 @@ def lineCheck(FileToCheck, count = 70):
     except FileNotFoundError:
         return "Error: file not found"
 
-    out = ""
     for i in range(len(lines)):
         if len(lines[i]) >= count:
-            out = out + "\n" + str(i + 1) + " " + str(len(lines[i])) + ' ' + lines[i]
+            out += f"\n{i + 1} {len(lines[i])} {lines[i]}"
     return out
 
 def outputToFile(fileName, data):
     fileName = str(fileName)
     if not (fileName[-4:] == ".txt"):
-        fileName = fileName + ".txt"
+        fileName += ".txt"
 
     try:
         file = open(fileName, "x")
@@ -37,8 +36,7 @@ def outputToFile(fileName, data):
 
     except FileExistsError:
         print("Error: a file with the name", fileName, "already Exists")
-        Errortext = "would you like to overwrite(O) " + fileName + ", or create a new file(N) " + fileName[:-4] + "NEW.txt? "
-        choice = input(Errortext)
+        choice = input(f"would you like to overwrite(O) {fileName}, or create a new file(N) {fileName[:-4]}NEW.txt? ")
 
         if choice == "O":
             if input("please type 'OVERWRITE' to confirm selection ") == "OVERWRITE":
